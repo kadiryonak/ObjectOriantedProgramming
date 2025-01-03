@@ -1,5 +1,6 @@
 using System;
-
+// Single Responsibility, her modülün bir iş yapması gerektiğini söyler. Her sınıf bir iş yapmalıdır. 
+// Her metot da bir iş yapmalıdır.
 namespace BasketballApp
 {
     // Oyuncu sınıfı - Sadece oyuncu bilgilerini ve istatistiklerini tutar.
