@@ -1,10 +1,25 @@
-// Open-Closed prensibi bize der ki. Yazdığınız kod geliştirilmeye açık lakin değişime kapalı olmalı. Bunu sağlamanın yolu
-// soyut sınıfları kullanmaktır. Yeni bir özellik eklediğimizde. Soyut sınıfımızdaki metotları alt sınıfta implemente ederek.
-// Yeni bir özellik ekleyebiliriz. Aşağıdaki kodda abstract soyut sınıf ve metot kullanılmış ve override edilmiş. İsterseniz
-// interface kullanarak da bunu sağlayabilirsiniz. Arasındaki fark abstract sınıfın içinde hem soyut hem somut sınıflar bulunabilir
-// alt sınıflar bir tane abstract sınıf miras alabilir. Bir alt sınıf birden fazla interface miras alabilir. İnterface Segragation
-// prensibi buna da değinmektedir. Abstract sınıftan override ederek ata sınıfın metodunu ezer ve çekirdeğini değiştirirsiniz.
-// interface de miras alıp soyut boş bir sınıfı aşağıda implemente edersiniz (kodlarsınız).
+// Open-Closed prensibi bize şunu söyler: 
+// Yazdığınız kod geliştirilmeye açık, ancak değişime kapalı olmalıdır. 
+// Bu prensibi sağlamanın yolu soyut sınıflar veya interface kullanmaktır. 
+
+// Abstract sınıf ile interface arasında bazı farklar bulunur: 
+// Abstract sınıfın içinde hem soyut hem somut metotlar bulunabilirken, 
+// bir alt sınıf yalnızca bir abstract sınıfı miras alabilir. 
+// Buna karşılık, bir alt sınıf birden fazla interface'i miras alabilir. 
+// Bu noktada Interface Segregation prensibi de devreye girer. 
+
+// Yeni bir özellik eklemek istediğinizde, 
+// soyut sınıfın metotlarını alt sınıfta implemente ederek 
+// temel sınıfa dokunmadan yeni özellikler ekleyebilirsiniz. 
+// Abstract sınıftan override yaparak ata sınıfın metodunu ezebilir 
+// ve çekirdeğini değiştirebilirsiniz. 
+// Böylece türetilmiş sınıfta kendi implementasyonunuzu sağlayarak 
+// temel sınıf davranışını değiştirme şansı elde edersiniz. 
+
+// Interface kullanıldığında ise, 
+// interface'i miras alır ve soyut (boş) metotları alt sınıfta implemente ederek (kodlayarak) 
+// kendi çözümünüzü oluşturursunuz. 
+// Bu yaklaşım da esnek ve genişletilebilir bir yapı sağlar.
 
 using System;
 using System.Collections.Generic;
@@ -23,7 +38,7 @@ namespace RocknRoll
     {
         public override void PerformansYap()
         {
-            Console.WriteLine("🎸 Gitarist epik bir solo çalıyor!");
+            Console.WriteLine("Gitarist bir solo çalıyor");
         }
     }
 
@@ -32,7 +47,7 @@ namespace RocknRoll
     {
         public override void PerformansYap()
         {
-            Console.WriteLine("🥁 Davulcu etkileyici bir ritim atıyor!");
+            Console.WriteLine("Davulcu ritim atıyor");
         }
     }
 
@@ -41,7 +56,7 @@ namespace RocknRoll
     {
         public override void PerformansYap()
         {
-            Console.WriteLine("🎤 Vokalist yüksek bir notaya çıkıyor!");
+            Console.WriteLine("Vokalist yüksek bir notaya çıkıyor");
         }
     }
 
@@ -57,7 +72,7 @@ namespace RocknRoll
                 new Vokalist()  // Vokalist ekleniyor
             };
 
-            Console.WriteLine(" Rock'n Roll Şovuna Hoş Geldiniz! ");
+            Console.WriteLine("Rock'n Roll Şovuna Hoş Geldiniz");
 
             // Her bir müzisyeni performans sergilemesi için sırayla çağırıyoruz
             foreach (var muzisyen in grup)
