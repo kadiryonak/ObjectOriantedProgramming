@@ -1,6 +1,7 @@
 using System;
 // Single Responsibility, her modülün bir iş yapması gerektiğini söyler. Her sınıf bir iş yapmalıdır. 
-// Her metot da bir iş yapmalıdır.
+// Modül denilince sınıf veya metot zannedilebiliyor. Aslında her ikisi de modüldür. İsmi belli başlangıcı ve sonu olan, belirli
+// bir işlevi yerine getiren kod parçasıdır.
 namespace BasketballApp
 {
     // Oyuncu sınıfı - Sadece oyuncu bilgilerini ve istatistiklerini tutar.
@@ -10,7 +11,7 @@ namespace BasketballApp
         public int Points { get; set; }
         public int Assists { get; set; }
         public int Rebounds { get; set; }
-
+        //Constructor oluşturma
         public BasketballPlayer(string Name, int Points, int Assists, int Rebounds)
         {
             this.Name = Name;
@@ -34,7 +35,7 @@ namespace BasketballApp
         static void Main(string[] args)
         {
             // Oyuncu nesnesi oluşturma
-            BasketballPlayer player = new BasketballPlayer("LeBron James", 30, 8, 10);
+            BasketballPlayer player = new BasketballPlayer("Kobe Braynt", 81, 6, 2);
 
             // Formatlama ve gösterim sınıfını kullanma
             PlayerStatisticsFormatter formatter = new PlayerStatisticsFormatter();
