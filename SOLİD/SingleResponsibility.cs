@@ -7,6 +7,7 @@ namespace BasketballApp
     // Oyuncu sınıfı - Sadece oyuncu bilgilerini ve istatistiklerini tutar.
     public class BasketballPlayer
     {
+        // Property
         public string Name { get; set; }
         public int Points { get; set; }
         public int Assists { get; set; }
