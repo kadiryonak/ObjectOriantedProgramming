@@ -1,67 +1,79 @@
+//Nesne oluşturma sorumluluğunu alt sınıflara devretmek. Üst sınıf ne oluşturulacağını değil, nasıl oluşturulacağını bilir.
+//Kodda bağımlılığı azaltır (Loosely Coupled).
+//Yeni türler eklemek kolaydır (yeni sınıf ve fabrika yazmak yeterli).
+//Açık/kapalı prensibi (Open/Closed Principle): Mevcut kodu değiştirmeden yeni türler eklenebilir.
+    
 using System;
 
-public interface IAnimal
+namespace FactoryMethodDeseniOrnegi
 {
-    // Her hayvanın konuşma davranışını tanımlayan bir metod.
-    void Speak();
-}
-
-public class Cat : IAnimal
-{
-    // Kedi sınıfı, Speak() metodunu kendi davranışıyla uygular.
-    public void Speak()
+    // IAnimal: Tüm hayvanların uygulaması gereken ortak davranışları tanımlar.
+    // Bu örnekte her hayvanın bir "konuşma" (Speak) davranışı vardır.
+    public interface IAnimal
     {
-        Console.WriteLine("Meow! I am a Cat.");
+        void Speak(); // Her hayvan konuşmalıdır.
     }
-}
 
-public class Dog : IAnimal
-{
-    // Köpek sınıfı, Speak() metodunu kendi davranışıyla uygular.
-    public void Speak()
+    // Cat sınıfı: IAnimal arayüzünü uygular ve kendine özgü ses verir.
+    public class Cat : IAnimal
     {
-        Console.WriteLine("Woof! I am a Dog.");
+        public void Speak()
+        {
+            Console.WriteLine("Meow! I am a Cat.");
+        }
     }
-}
 
-// Bu soyut sınıf, fabrika metodunu tanımlar.
-// Alt sınıflar, hangi tür hayvanın oluşturulacağını belirler.
-public abstract class AnimalFactory
-{
-    // Fabrika metodu: Alt sınıflar tarafından özelleştirilir.
-    public abstract IAnimal CreateAnimal();
-}
-
-public class CatFactory : AnimalFactory
-{
-    // CatFactory, CreateAnimal() metodunu geçersiz kılar ve bir Cat nesnesi oluşturur.
-    public override IAnimal CreateAnimal()
+    // Dog sınıfı: IAnimal arayüzünü uygular ve kendine özgü ses verir.
+    public class Dog : IAnimal
     {
-        return new Cat();
+        public void Speak()
+        {
+            Console.WriteLine("Woof! I am a Dog.");
+        }
     }
-}
 
-public class DogFactory : AnimalFactory
-{
-    // DogFactory, CreateAnimal() metodunu geçersiz kılar ve bir Dog nesnesi oluşturur.
-    public override IAnimal CreateAnimal()
+    // AnimalFactory: Soyut fabrika sınıfıdır.
+    // Alt sınıflar, hangi hayvanın üretileceğine karar verir.
+    public abstract class AnimalFactory
     {
-        return new Dog();
+        // Factory Method: Hayvan nesnesini oluşturacak soyut metod.
+        // Alt sınıflar bu metodu override ederek hangi hayvanı üreteceğini belirler.
+        public abstract IAnimal CreateAnimal();
     }
-}
 
-class Program
-{
-    static void Main(string[] args)
+    // CatFactory: AnimalFactory sınıfını genişletir.
+    // Bu fabrika sadece kedi üretmek için kullanılır.
+    public class CatFactory : AnimalFactory
     {
-        // Kedi oluşturmak için CatFactory'yi kullanıyoruz.
-        AnimalFactory catFactory = new CatFactory();
-        IAnimal cat = catFactory.CreateAnimal(); // Cat nesnesi oluşturulur.
-        cat.Speak(); // Çıktı: Meow! I am a Cat.
+        public override IAnimal CreateAnimal()
+        {
+            return new Cat(); // Cat nesnesi oluşturulup geri döndürülür.
+        }
+    }
 
-        // Köpek oluşturmak için DogFactory'yi kullanıyoruz.
-        AnimalFactory dogFactory = new DogFactory();
-        IAnimal dog = dogFactory.CreateAnimal(); // Dog nesnesi oluşturulur.
-        dog.Speak(); // Çıktı: Woof! I am a Dog.
+    // DogFactory: AnimalFactory sınıfını genişletir.
+    // Bu fabrika sadece köpek üretmek için kullanılır.
+    public class DogFactory : AnimalFactory
+    {
+        public override IAnimal CreateAnimal()
+        {
+            return new Dog(); // Dog nesnesi oluşturulup geri döndürülür.
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // 1. CatFactory ile kedi nesnesi oluşturuluyor.
+            AnimalFactory catFactory = new CatFactory();
+            IAnimal cat = catFactory.CreateAnimal(); // Kedi üretilir.
+            cat.Speak(); // Çıktı: Meow! I am a Cat.
+
+            // 2. DogFactory ile köpek nesnesi oluşturuluyor.
+            AnimalFactory dogFactory = new DogFactory();
+            IAnimal dog = dogFactory.CreateAnimal(); // Köpek üretilir.
+            dog.Speak(); // Çıktı: Woof! I am a Dog.
+        }
     }
 }
