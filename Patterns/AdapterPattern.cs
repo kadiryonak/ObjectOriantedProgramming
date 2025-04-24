@@ -1,38 +1,44 @@
+// Adapter Pattern, farklı arayüzlere (interface) sahip olan iki sınıfı birbiriyle uyumlu hale getirmek için kullanılır. 
+// Eski bir sistemle yeni bir sistemin birlikte çalışmasını sağlar.
+
 using System;
 
-namespace RefactoringGuru.DesignPatterns.Adapter.Conceptual
+namespace AdapterDeseniOrnegi
 {
-    // The Target defines the domain-specific interface used by the client code.
+    // ITarget: Müşterinin (Client) kullanmak istediği arayüz.
+    // Uygulamanın diğer kısımları bu arayüz üzerinden işlem yapar.
     public interface ITarget
     {
         string GetRequest();
     }
 
-    // The Adaptee contains some useful behavior, but its interface is
-    // incompatible with the existing client code. The Adaptee needs some
-    // adaptation before the client code can use it.
+    // Adaptee: Halihazırda var olan, işe yarayan ancak arayüzü uyumsuz olan sınıf.
+    // Yani client (istemci) doğrudan bu sınıfla çalışamaz.
     class Adaptee
     {
         public string GetSpecificRequest()
         {
-            return "Specific request.";
+            return "Özgül istek"; // Özgün (specific) metodun dönüş değeri
         }
     }
 
-    // The Adapter makes the Adaptee's interface compatible with the Target's
-    // interface.
+    // Adapter: Hem ITarget arayüzünü uygular (client ile uyumlu olur),
+    // hem de içeride Adaptee nesnesini kullanarak onun fonksiyonelliğini sunar.
     class Adapter : ITarget
     {
         private readonly Adaptee _adaptee;
 
+        // Adapter, içeride kullanılacak Adaptee nesnesini alır.
         public Adapter(Adaptee adaptee)
         {
             this._adaptee = adaptee;
         }
 
+        // ITarget arayüzünün metodunu implemente eder ve
+        // içeride Adaptee'nin metodunu çağırır.
         public string GetRequest()
         {
-            return $"This is '{this._adaptee.GetSpecificRequest()}'";
+            return $"Adapter üzerinden: '{this._adaptee.GetSpecificRequest()}'";
         }
     }
 
@@ -40,12 +46,17 @@ namespace RefactoringGuru.DesignPatterns.Adapter.Conceptual
     {
         static void Main(string[] args)
         {
+            // Adaptee sınıfı, mevcut ancak istemcinin beklediği yapıyla uyumlu değil.
             Adaptee adaptee = new Adaptee();
+
+            // Adapter sınıfı, Adaptee nesnesini alır ve ITarget arayüzüne uyarlayarak
+            // istemcinin anlayacağı şekilde çalışmasını sağlar.
             ITarget target = new Adapter(adaptee);
 
-            Console.WriteLine("Adaptee interface is incompatible with the client.");
-            Console.WriteLine("But with adapter client can call it's method.");
+            Console.WriteLine("Adaptee sınıfının arayüzü istemciyle uyumlu değil.");
+            Console.WriteLine("Ancak Adapter sayesinde istemci onun metodunu çağırabiliyor.");
 
+            // İstemci artık ITarget arayüzü üzerinden Adaptee'nin metodunu dolaylı olarak çağırabilir.
             Console.WriteLine(target.GetRequest());
         }
     }
