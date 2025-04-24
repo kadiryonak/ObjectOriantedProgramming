@@ -1,56 +1,34 @@
 using System;
+using System.Collections.Generic;
 
-namespace SingletonPoolPattern
+namespace MultitonPattern
 {
     class BaplantiPool
     {
-        private static readonly BaplantiPool[] pool = new BaplantiPool[5];
-        private static readonly bool[] isUsed = new bool[5]; 
-        private static int currentIndex = 0;
+        private static readonly Dictionary<int, BaplantiPool> pool = new Dictionary<int, BaplantiPool>(); // Nesneler için bir liste oluşturduk.
+        private const int MAX_INSTANCES = 5;// 5 tane farklı nesnemiz olacak daha fazlası değil. Bunu ben id vererek istediğim nesneyi çağıracağım. İsterseniz bir döngü ile sürekli başa saran bir yapı da oluşturabilirsiniz.
 
-        public int Id { get; private set; } 
+        public int Id { get; private set; }
 
+        // Private constructor — dışarıdan new yapılamaz
         private BaplantiPool(int id)
         {
             Id = id;
+            Console.WriteLine($"BaplantiPool #{id} oluşturuldu.");
         }
 
-        static BaplantiPool()
+        // Nesneye ID ile erişim sağlar
+        public static BaplantiPool GetInstance(int id)
         {
-            for (int i = 0; i < pool.Length; i++)
-            {
-                pool[i] = new BaplantiPool(i + 1); // 1'den 5'e kadar ID atanır
-                isUsed[i] = false; // Tüm nesneler başlangıçta boş
-            }
-        }
+            if (id < 1 || id > MAX_INSTANCES)
+                throw new ArgumentException("ID 1 ile 5 arasında olmalı!");
 
-        public static BaplantiPool GetNextAvailable()
-        {
-            for (int i = 0; i < pool.Length; i++)
+            if (!pool.ContainsKey(id))
             {
-                int index = (currentIndex + i) % pool.Length; // Döngüsel kontrol
-                if (!isUsed[index])
-                {
-                    isUsed[index] = true; // Nesne kullanımda olarak işaretlenir
-                    currentIndex = index; // Son kullanılan index güncellenir
-                    return pool[index];
-                }
+                pool[id] = new BaplantiPool(id); // Yalnızca bir kez oluştur
             }
-            
-            throw new InvalidOperationException("Tüm nesneler kullanımda!");
-        }
 
-        public static void Release(BaplantiPool obj)
-        {
-            for (int i = 0; i < pool.Length; i++)
-            {
-                if (pool[i] == obj)
-                {
-                    isUsed[i] = false; // Nesne boş olarak işaretlenir
-                    return;
-                }
-            }
-            throw new ArgumentException("Nesne havuzda bulunmuyor!");
+            return pool[id]; // Her seferinde aynı örneği döndür
         }
     }
 
@@ -58,29 +36,17 @@ namespace SingletonPoolPattern
     {
         static void Main(string[] args)
         {
-            var b1 = BaplantiPool.GetNextAvailable();
-            Console.WriteLine("B1 ID: " + b1.Id);
+            var b1 = BaplantiPool.GetInstance(1);
+            var b2 = BaplantiPool.GetInstance(2);
+            var b3 = BaplantiPool.GetInstance(3);
+            var b4 = BaplantiPool.GetInstance(4);
+            var b5 = BaplantiPool.GetInstance(5);
 
-            var b2 = BaplantiPool.GetNextAvailable();
-            Console.WriteLine("B2 ID: " + b2.Id);
+            // Aynı ID ile tekrar erişim, aynı nesneyi verir
+            var b1Again = BaplantiPool.GetInstance(1);
 
-            var b3 = BaplantiPool.GetNextAvailable();
-            Console.WriteLine("B3 ID: " + b3.Id);
-
-            var b4 = BaplantiPool.GetNextAvailable();
-            Console.WriteLine("B4 ID: " + b4.Id);
-
-            var b5 = BaplantiPool.GetNextAvailable();
-            Console.WriteLine("B5 ID: " + b5.Id);
-
-            // Serbest bırakılan nesneler tekrar kullanılabilir
-            BaplantiPool.Release(b3);
-            var b6 = BaplantiPool.GetNextAvailable();
-            Console.WriteLine("B6 ID (B3 tekrar kullanıldı): " + b6.Id);
-
-            BaplantiPool.Release(b1);
-            var b7 = BaplantiPool.GetNextAvailable();
-            Console.WriteLine("B7 ID (B1 tekrar kullanıldı): " + b7.Id);
+            Console.WriteLine($"b1 == b1Again ? {b1 == b1Again}"); // true
+            // Başka denemeler de yapabilirsiniz. Hangisinin adresi aynı veya farklı.
         }
     }
 }
